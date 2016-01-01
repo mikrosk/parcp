@@ -1,7 +1,12 @@
 #include "element.h"
 #include <string.h>
+#ifndef ATARI
 #include <curses.h>
-#include <panel.h>
+#include <panel.h> 
+#else 
+#include <ncurses/curses.h>
+#include <ncurses/panel.h>
+#endif
 
 #define REVERSE_INFOLINE
 

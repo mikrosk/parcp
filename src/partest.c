@@ -13,8 +13,13 @@
 #include "match.h"
 
 #ifdef SHELL
+#ifndef ATARI
 #include <curses.h>
 #include <panel.h>
+#else
+#include <ncurses/curses.h>
+#include <ncurses/panel.h>
+#endif
 extern MYBOOL curses_initialized;
 extern int progress_width;
 extern WINDOW *pwincent;

@@ -17,8 +17,13 @@
 #endif
 
 #ifdef SHELL
+#ifndef ATARI
 #include <curses.h>
 #include <panel.h>
+#else
+#include <ncurses/curses.h>
+#include <ncurses/panel.h>
+#endif
 extern MYBOOL curses_initialized;
 extern int progress_width;
 extern WINDOW *pwincent;
@@ -886,7 +891,7 @@ MYBOOL get_volume_info(const char *fname, gvi x)
 MYBOOL fs_sensitive(const char *fname)
 {
 #if defined(ATARI)
-	return (pathconf(fname, _PC_NAME_CASE) == 0) ? TRUE : FALSE;
+	return (pathconf(fname, _MINT_PC_NAME_CASE) == 0) ? TRUE : FALSE;
 #elif defined(__MSDOS__)
 	return (_get_volume_info(fname, NULL, NULL, NULL) & _FILESYS_CASE_SENSITIVE) ? TRUE : FALSE;
 #elif defined(_WIN32)
@@ -1102,9 +1107,9 @@ void list_dir(const char *p2, int maska, char *zacatek)
 				continue;	// if the stat() fails then the file basically does not exist so we need to skip it (this definitely hides those VFAT ghost entries with ugly file names)
 			}
 #if ATARI
-			if (! _show_hidden && (stb.st_attr & 0x02)) // file is hidden in 8.3 DOS/TOS
+			if (! _show_hidden && (stb.st_flags & 0x02)) // file is hidden in 8.3 DOS/TOS
 				continue;
-			if (stb.st_attr & 0x08) // entry is VolumeID
+			if (stb.st_flags & 0x08) // entry is VolumeID
 				continue;			// this should also remove VFAT ghost entries that have all VolumeID set
 #endif
 			if (!strcmp(fname, ".DS_Store"))

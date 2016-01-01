@@ -1,6 +1,10 @@
 #include "shell.h"
 #include "menu.h"
+#ifndef ATARI
 #include <panel.h>
+#else
+#include <ncurses/panel.h>
+#endif
 #include <string.h>
 #include <stdlib.h>
 

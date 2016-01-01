@@ -2,7 +2,11 @@
 #define _menu_h
 
 #include "element.h"
+#ifndef ATARI
 #include <curses.h>
+#else
+#include <ncurses/curses.h>
+#endif
 
 #define  MENU_PASSED	(1<<0)
 #define  MENU_SUBTREE	(1<<1)

@@ -9,8 +9,13 @@
 #include "element.h"
 #include "shell.h"
 #include "box.h"
+#ifndef ATARI
 #include <curses.h>
 #include <panel.h>
+#else
+#include <ncurses/curses.h>
+#include <ncurses/panel.h>
+#endif
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>

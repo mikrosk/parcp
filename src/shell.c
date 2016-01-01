@@ -7,8 +7,13 @@
  */
 
 #include "parcp.h"
+#ifndef ATARI
 #include <curses.h>
 #include <panel.h>
+#else
+#include <ncurses/curses.h>
+#include <ncurses/panel.h>
+#endif
 #include <string.h>
 #include <stdlib.h>
 #ifdef __LINUX__
@@ -80,7 +85,7 @@ MYBOOL smoothscroll=TRUE;
 MYBOOL vypisovat_delku=TRUE, vypisovat_datum=TRUE, vypisovat_cas=FALSE;
 MYBOOL _confirm_copy=TRUE, _confirm_move=TRUE, _confirm_delete=TRUE;
 #ifdef ATARI
-extern int _ncurses_ANSI_graphics;
+static int _ncurses_ANSI_graphics;
 #endif
 
 char path_to_viewer[MAXPATH]="";
@@ -211,7 +216,7 @@ void prekresli_stranku(OKNO *okno)
 	update_panels();
 }
 
-#if defined(ATARI) || defined(__MSDOS__)	// neither MiNTlib nor DJGPP know atoll
+#if defined(__MSDOS__)	// DJGPP doesn't know atoll
 ULONG64 atoll(const char *c)
 {
 	ULONG64 result = 0;
