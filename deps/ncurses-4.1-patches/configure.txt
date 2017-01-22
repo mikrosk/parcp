@@ -1,0 +1,1 @@
+./configure --without-debug --without-gpm --disable-termcap --disable-getcap --disable-getcap-cache

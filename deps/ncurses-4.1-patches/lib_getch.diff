@@ -1,0 +1,20 @@
+--- lib_getch.c	Sat Feb 15 22:12:16 1997
++++ /usr/src/ncurses-4.1/ncurses/lib_getch.c	Sat Jun  7 17:45:12 1997
+@@ -328,6 +328,8 @@
+ **
+ */
+ 
++extern int __mint;
++
+ static int
+ kgetch(WINDOW *win GCC_UNUSED)
+ {
+@@ -367,7 +369,7 @@
+ 					break;
+ 
+ 				TR(TRACE_IEVENT, ("waiting for rest of sequence"));
+-				if (!_nc_timed_wait(3, timeleft, &timeleft)) {
++				if (__mint && !_nc_timed_wait(3, timeleft, &timeleft)) {
+ 					TR(TRACE_IEVENT, ("ran out of time"));
+ 					return(fifo_pull());
+ 				} else {
