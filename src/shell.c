@@ -85,7 +85,7 @@ MYBOOL smoothscroll=TRUE;
 MYBOOL vypisovat_delku=TRUE, vypisovat_datum=TRUE, vypisovat_cas=FALSE;
 MYBOOL _confirm_copy=TRUE, _confirm_move=TRUE, _confirm_delete=TRUE;
 #ifdef ATARI
-static int _ncurses_ANSI_graphics;
+extern int _ncurses_ANSI_graphics;
 #endif
 
 char path_to_viewer[MAXPATH]="";
