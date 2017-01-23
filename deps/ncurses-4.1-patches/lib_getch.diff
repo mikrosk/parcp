@@ -1,6 +1,8 @@
---- lib_getch.c	Sat Feb 15 22:12:16 1997
-+++ /usr/src/ncurses-4.1/ncurses/lib_getch.c	Sat Jun  7 17:45:12 1997
-@@ -328,6 +328,8 @@
+diff --git a/deps/ncurses-4.1/ncurses/lib_getch.c b/deps/ncurses-4.1/ncurses/lib_getch.c
+index d59531f..742f141 100644
+--- a/deps/ncurses-4.1/ncurses/lib_getch.c
++++ b/deps/ncurses-4.1/ncurses/lib_getch.c
+@@ -328,6 +328,8 @@ int	ch;
  **
  */
  
@@ -9,7 +11,7 @@
  static int
  kgetch(WINDOW *win GCC_UNUSED)
  {
-@@ -367,7 +369,7 @@
+@@ -367,7 +369,7 @@ int timeleft = ESCDELAY;
  					break;
  
  				TR(TRACE_IEVENT, ("waiting for rest of sequence"));

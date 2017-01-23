@@ -1,7 +1,8 @@
-diff -ru ncurses-4.1/ncurses/lib_acs.c new/ncurses/lib_acs.c
---- ncurses-4.1/ncurses/lib_acs.c	1997-04-24 21:04:07.000000000 +1000
-+++ new/ncurses/lib_acs.c	2017-01-23 09:15:22.000000000 +1000
-@@ -28,6 +28,9 @@
+diff --git a/deps/ncurses-4.1/ncurses/lib_acs.c b/deps/ncurses-4.1/ncurses/lib_acs.c
+index bacfe05..6f5f674 100644
+--- a/deps/ncurses-4.1/ncurses/lib_acs.c
++++ b/deps/ncurses-4.1/ncurses/lib_acs.c
+@@ -28,6 +28,9 @@ MODULE_ID("$Id: lib_acs.c,v 1.8 1997/04/24 11:04:07 tom Exp $")
  
  chtype acs_map[128];
  
@@ -11,7 +12,7 @@ diff -ru ncurses-4.1/ncurses/lib_acs.c new/ncurses/lib_acs.c
  void init_acs(void)
  {
  	T(("initializing ACS map"));
-@@ -36,6 +39,42 @@
+@@ -36,6 +39,42 @@ void init_acs(void)
  	 * Initializations for a UNIX-like multi-terminal environment.  Use
  	 * ASCII chars and count on the terminfo description to do better.
  	 */
@@ -54,20 +55,23 @@ diff -ru ncurses-4.1/ncurses/lib_acs.c new/ncurses/lib_acs.c
  	ACS_ULCORNER = '+';	/* should be upper left corner */
  	ACS_LLCORNER = '+';	/* should be lower left corner */
  	ACS_URCORNER = '+';	/* should be upper right corner */
-@@ -67,8 +106,9 @@
+@@ -67,8 +106,9 @@ void init_acs(void)
  	ACS_LEQUAL   = '<';	/* should be less-than-or-equal-to */
  	ACS_GEQUAL   = '>';	/* should be greater-than-or-equal-to */
  	ACS_PI       = '*';	/* should be greek pi */
- 	ACS_NEQUAL   = '!';	/* should be not-equal */
- 	ACS_STERLING = 'f';	/* should be pound-sterling symbol */
+-        ACS_NEQUAL   = '!';	/* should be not-equal */
+-        ACS_STERLING = 'f';	/* should be pound-sterling symbol */
++	ACS_NEQUAL   = '!';	/* should be not-equal */
++	ACS_STERLING = 'f';	/* should be pound-sterling symbol */
 +}
  
  #ifdef ena_acs
  	if (ena_acs != NULL)
-diff -ru ncurses-4.1/ncurses/lib_baudrate.c new/ncurses/lib_baudrate.c
---- ncurses-4.1/ncurses/lib_baudrate.c	1997-04-27 03:41:48.000000000 +1000
-+++ new/ncurses/lib_baudrate.c	2017-01-23 09:15:22.000000000 +1000
-@@ -38,58 +38,6 @@
+diff --git a/deps/ncurses-4.1/ncurses/lib_baudrate.c b/deps/ncurses-4.1/ncurses/lib_baudrate.c
+index 333fd03..40ddb7e 100644
+--- a/deps/ncurses-4.1/ncurses/lib_baudrate.c
++++ b/deps/ncurses-4.1/ncurses/lib_baudrate.c
+@@ -38,58 +38,6 @@ MODULE_ID("$Id: lib_baudrate.c,v 1.7 1997/04/26 17:41:48 tom Exp $")
   *
   */
  
@@ -126,7 +130,7 @@ diff -ru ncurses-4.1/ncurses/lib_baudrate.c new/ncurses/lib_baudrate.c
  
  int
  baudrate(void)
-@@ -122,14 +70,7 @@
+@@ -122,14 +70,7 @@ char *debug_rate;
  #else
  	ret = cur_term->Nttyb.sg_ospeed;
  #endif
@@ -143,9 +147,11 @@ diff -ru ncurses-4.1/ncurses/lib_baudrate.c new/ncurses/lib_baudrate.c
 -	returnCode(SP->_baudrate);
 +	returnCode(9600);
  }
---- ncurses-4.1/ncurses/lib_initscr.c	1997-03-09 00:03:59.000000000 +1000
-+++ new/ncurses/lib_initscr.c	2017-01-23 09:15:22.000000000 +1000
-@@ -78,7 +78,16 @@
+diff --git a/deps/ncurses-4.1/ncurses/lib_initscr.c b/deps/ncurses-4.1/ncurses/lib_initscr.c
+index 3a995d2..c3151ae 100644
+--- a/deps/ncurses-4.1/ncurses/lib_initscr.c
++++ b/deps/ncurses-4.1/ncurses/lib_initscr.c
+@@ -78,7 +78,16 @@ const char *name;
  			name = "unknown";
  		if (newterm(name, stdout, stdin) == 0) {
  			fprintf(stderr, "Error opening terminal: %s.\n", name);
@@ -162,10 +168,11 @@ diff -ru ncurses-4.1/ncurses/lib_baudrate.c new/ncurses/lib_baudrate.c
  		}
  
  		/* allow user to set maximum escape delay from the environment */
-diff -ru ncurses-4.1/ncurses/lib_setup.c new/ncurses/lib_setup.c
---- ncurses-4.1/ncurses/lib_setup.c	1997-03-09 07:25:44.000000000 +1000
-+++ new/ncurses/lib_setup.c	2017-01-23 09:15:22.000000000 +1000
-@@ -175,12 +175,14 @@
+diff --git a/deps/ncurses-4.1/ncurses/lib_setup.c b/deps/ncurses-4.1/ncurses/lib_setup.c
+index 9a194b5..7f189e6 100644
+--- a/deps/ncurses-4.1/ncurses/lib_setup.c
++++ b/deps/ncurses-4.1/ncurses/lib_setup.c
+@@ -175,12 +175,14 @@ static int grab_entry(const char *const tn, TERMTYPE *const tp)
  	    return(1);
  
  #ifndef PURE_TERMINFO
@@ -186,7 +193,7 @@ diff -ru ncurses-4.1/ncurses/lib_setup.c new/ncurses/lib_setup.c
  #endif /* PURE_TERMINFO */
  
  	return(status);
-@@ -203,10 +205,21 @@
+@@ -203,10 +205,21 @@ int status;
  
  	T((T_CALLED("setupterm(\"%s\",%d,%p)"), tname, Filedes, errret));
  
@@ -210,7 +217,7 @@ diff -ru ncurses-4.1/ncurses/lib_setup.c new/ncurses/lib_setup.c
  	}
  
  	T(("your terminal name is %s", tname));
-@@ -257,7 +270,8 @@
+@@ -257,7 +270,8 @@ int status;
  	 */
  	if (Filedes == STDOUT_FILENO && !isatty(Filedes))
  	    Filedes = STDERR_FILENO;
@@ -219,3 +226,4 @@ diff -ru ncurses-4.1/ncurses/lib_setup.c new/ncurses/lib_setup.c
 +	cur_term->Filedes = 0;	/* with Filedes = 0 everything works as intended */
  
  	_nc_get_screensize();
+ 
