@@ -1,1 +1,24 @@
-./configure --without-debug --without-gpm --disable-termcap --disable-getcap --disable-getcap-cache
+# Start
+
+`cd ncurses-4.1`
+
+# Cross compilation:
+
+1. Chance `$(CC)` to `gcc` for the `make_hash` target in `ncurses-4.1/ncurses/Makefile.in`
+2. `CC=m68k-atari-mint-gcc CXX=m68k-atari-mint-g++ AR=m68k-atari-mint-ar RANLIB=m68k-atari-mint-ranlib LD=m68k-atari-mint-ld ./configure --without-debug --without-gpm --disable-termcap --disable-getcap --disable-getcap-cache`
+
+# Native compilation:
+
+`./configure --without-debug --without-gpm --disable-termcap --disable-getcap --disable-getcap-cache --host=m68k-atari-mint --target=m68k-atari-mint`
+
+# make
+`make`
+
+# patch
+`cp ../ncurses-4.1-patches/fallback.c ncurses/fallback.c`
+`cp ../ncurses-4.1-patches/term.h include/term.h`
+`cat ../ncurses-4.1-patches/lib_getch.diff | patch -p3`
+`cat ../ncurses-4.1-patches/misc.diff | patch -p3`
+
+# make again
+`make`
