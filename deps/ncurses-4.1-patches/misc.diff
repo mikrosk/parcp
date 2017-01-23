@@ -1,0 +1,221 @@
+diff -ru ncurses-4.1/ncurses/lib_acs.c new/ncurses/lib_acs.c
+--- ncurses-4.1/ncurses/lib_acs.c	1997-04-24 21:04:07.000000000 +1000
++++ new/ncurses/lib_acs.c	2017-01-23 09:15:22.000000000 +1000
+@@ -28,6 +28,9 @@
+ 
+ chtype acs_map[128];
+ 
++/* can be accessed from linked program */
++int _ncurses_ANSI_graphics = 0;		/* by default use standard ASCII characters */
++
+ void init_acs(void)
+ {
+ 	T(("initializing ACS map"));
+@@ -36,6 +39,42 @@
+ 	 * Initializations for a UNIX-like multi-terminal environment.  Use
+ 	 * ASCII chars and count on the terminfo description to do better.
+ 	 */
++if (_ncurses_ANSI_graphics) {
++	ACS_ULCORNER =0xda;	/* should be upper left corner */
++	ACS_LLCORNER =0xc0;	/* should be lower left corner */
++	ACS_URCORNER =0xbf;	/* should be upper right corner */
++	ACS_LRCORNER =0xd9;	/* should be lower right corner */
++	ACS_RTEE     = '+';	/* should be tee pointing left */
++	ACS_LTEE     = '+';	/* should be tee pointing right */
++	ACS_BTEE     = '+';	/* should be tee pointing up */
++	ACS_TTEE     = '+';	/* should be tee pointing down */
++	ACS_HLINE    =0xc4;	/* should be horizontal line */
++	ACS_VLINE    =0xb3;	/* should be vertical line */
++	ACS_PLUS     =0xc5;	/* should be large plus or crossover */
++	ACS_S1       = '~';	/* should be scan line 1 */
++	ACS_S9       = '_';	/* should be scan line 9 */
++	ACS_DIAMOND  = '+';	/* should be diamond */
++	ACS_CKBOARD  =0xb0;	/* should be checker board (stipple) */
++	ACS_DEGREE   =0xf8;	/* should be degree symbol */
++	ACS_PLMINUS  =0xf1;	/* should be plus/minus */
++	ACS_BULLET   =0xf9;	/* should be bullet */
++	ACS_LARROW   =0xae;	/* should be arrow pointing left */
++	ACS_RARROW   =0xaf;	/* should be arrow pointing right */
++	ACS_DARROW   = 'v';	/* should be arrow pointing down */
++	ACS_UARROW   = '^';	/* should be arrow pointing up */
++	ACS_BOARD    =0xb1;	/* should be board of squares */
++	ACS_LANTERN  =0xb2;	/* should be lantern symbol */
++	ACS_BLOCK    =0xdb;	/* should be solid square block */
++	/* these defaults were invented for ncurses */
++	ACS_S3       = '-';	/* should be scan line 3 */
++	ACS_S7       = '-';	/* should be scan line 7 */
++	ACS_LEQUAL   =0xf3;	/* should be less-than-or-equal-to */
++	ACS_GEQUAL   =0xf2;	/* should be greater-than-or-equal-to */
++	ACS_PI       =0xe3;	/* should be greek pi */
++	ACS_NEQUAL   = '!';	/* should be not-equal */
++	ACS_STERLING = 'f';	/* should be pound-sterling symbol */
++}
++else {
+ 	ACS_ULCORNER = '+';	/* should be upper left corner */
+ 	ACS_LLCORNER = '+';	/* should be lower left corner */
+ 	ACS_URCORNER = '+';	/* should be upper right corner */
+@@ -67,8 +106,9 @@
+ 	ACS_LEQUAL   = '<';	/* should be less-than-or-equal-to */
+ 	ACS_GEQUAL   = '>';	/* should be greater-than-or-equal-to */
+ 	ACS_PI       = '*';	/* should be greek pi */
+ 	ACS_NEQUAL   = '!';	/* should be not-equal */
+ 	ACS_STERLING = 'f';	/* should be pound-sterling symbol */
++}
+ 
+ #ifdef ena_acs
+ 	if (ena_acs != NULL)
+diff -ru ncurses-4.1/ncurses/lib_baudrate.c new/ncurses/lib_baudrate.c
+--- ncurses-4.1/ncurses/lib_baudrate.c	1997-04-27 03:41:48.000000000 +1000
++++ new/ncurses/lib_baudrate.c	2017-01-23 09:15:22.000000000 +1000
+@@ -38,58 +38,6 @@
+  *
+  */
+ 
+-struct speed {
+-	speed_t s;
+-	int sp;
+-};
+-
+-static struct speed const speeds[] = {
+-	{B0, 0},
+-	{B50, 50},
+-	{B75, 75},
+-	{B110, 110},
+-	{B134, 134},
+-	{B150, 150},
+-	{B200, 200},
+-	{B300, 300},
+-	{B600, 600},
+-	{B1200, 1200},
+-	{B1800, 1800},
+-	{B2400, 2400},
+-	{B4800, 4800},
+-	{B9600, 9600},
+-#define MAX_BAUD	B9600
+-#ifdef B19200
+-#undef MAX_BAUD
+-#define MAX_BAUD	B19200
+-	{B19200, 19200},
+-#else
+-#ifdef EXTA
+-#define MAX_BAUD	EXTA
+-	{EXTA, 19200},
+-#endif
+-#endif
+-#ifdef B38400
+-#undef MAX_BAUD
+-#define MAX_BAUD	B38400
+-	{B38400, 38400},
+-#else
+-#ifdef EXTB
+-#define MAX_BAUD	EXTB
+-	{EXTB, 38400},
+-#endif
+-#endif
+-#ifdef B57600
+-#undef MAX_BAUD
+-#define MAX_BAUD        B57600
+-	{B57600, 57600},
+-#endif
+-#ifdef B115200
+-#undef MAX_BAUD
+-#define MAX_BAUD        B115200
+-	{B115200, 115200},
+-#endif
+-};
+ 
+ int
+ baudrate(void)
+@@ -122,14 +70,7 @@
+ #else
+ 	ret = cur_term->Nttyb.sg_ospeed;
+ #endif
+-	if(ret < 0 || ret > MAX_BAUD)
++	if(ret < 0 || ret > 9600)
+ 		returnCode(ERR);
+-	SP->_baudrate = ERR;
+-	for (i = 0; i < (sizeof(speeds) / sizeof(struct speed)); i++)
+-		if (speeds[i].s == (speed_t)ret)
+-		{
+-			SP->_baudrate = speeds[i].sp;
+-			break;
+-		}
+-	returnCode(SP->_baudrate);
++	returnCode(9600);
+ }
+--- ncurses-4.1/ncurses/lib_initscr.c	1997-03-09 00:03:59.000000000 +1000
++++ new/ncurses/lib_initscr.c	2017-01-23 09:15:22.000000000 +1000
+@@ -78,7 +78,16 @@
+ 			name = "unknown";
+ 		if (newterm(name, stdout, stdin) == 0) {
+ 			fprintf(stderr, "Error opening terminal: %s.\n", name);
++#ifdef ORIGINAL_NCURSES
+ 			exit(EXIT_FAILURE);
++#else
++			fprintf(stderr, "Falling back to internal Atari ST VT52 emulation\n");
++			name = "unknown";
++			if (newterm(name, stdout, stdin) == 0) {
++				fprintf(stderr, "Error opening terminal: %s.\n", name);
++				exit(EXIT_FAILURE);
++			}
++#endif
+ 		}
+ 
+ 		/* allow user to set maximum escape delay from the environment */
+diff -ru ncurses-4.1/ncurses/lib_setup.c new/ncurses/lib_setup.c
+--- ncurses-4.1/ncurses/lib_setup.c	1997-03-09 07:25:44.000000000 +1000
++++ new/ncurses/lib_setup.c	2017-01-23 09:15:22.000000000 +1000
+@@ -175,12 +175,14 @@
+ 	    return(1);
+ 
+ #ifndef PURE_TERMINFO
+-	/*
+-	 * Try falling back on the termcap file.  Note: allowing this call
+-	 * links the entire terminfo/termcap compiler into the startup code.
+-	 * It's preferable to build a real terminfo database and use that.
+-	 */
+-	status = _nc_read_termcap_entry(tn, tp);
++	if (getenv("TERMCAP") != NULL) {
++		/*
++	 	* Try falling back on the termcap file.  Note: allowing this call
++	 	* links the entire terminfo/termcap compiler into the startup code.
++	 	* It's preferable to build a real terminfo database and use that.
++	 	*/
++		status = _nc_read_termcap_entry(tn, tp);
++	}
+ #endif /* PURE_TERMINFO */
+ 
+ 	return(status);
+@@ -203,10 +205,21 @@
+ 
+ 	T((T_CALLED("setupterm(\"%s\",%d,%p)"), tname, Filedes, errret));
+ 
+-	if (tname == NULL) {
++	if (tname == NULL || strcmp(tname, "unknown") == 0) {
++#if 0
+ 		tname = getenv("TERM");
+ 		if (tname == NULL)
+-			ret_error0(-1, "TERM environment variable not set.\n");
++#endif
++		{
++			/* to je urcite TOS kdyz nema nastavenou TERM promennou */
++#include <linea.h>
++			linea0();
++			if (VPLANES >= 4)
++				tname = "vt52c";
++			else
++				tname = "vt52m";
++			write(1,"\033v",2);	/* WRAP ON (vzdy mit spravne inicializovany TOS VT52) */
++		}
+ 	}
+ 
+ 	T(("your terminal name is %s", tname));
+@@ -257,7 +270,8 @@
+ 	 */
+ 	if (Filedes == STDOUT_FILENO && !isatty(Filedes))
+ 	    Filedes = STDERR_FILENO;
+-	cur_term->Filedes = Filedes;
++/*	cur_term->Filedes = Filedes; with Filedes = 1 read() doesn't work :-( */
++	cur_term->Filedes = 0;	/* with Filedes = 0 everything works as intended */
+ 
+ 	_nc_get_screensize();
