@@ -128,7 +128,7 @@ keys.tries: $(srcdir)/keys.list
 make_hash : \
 		$(srcdir)/comp_hash.c \
 		../include/hashsize.h
-	$(CC) -o $@ $(CCFLAGS) -DMAIN_PROGRAM $(srcdir)/comp_hash.c $(LDFLAGS)
+	gcc -o $@ $(CCFLAGS) -DMAIN_PROGRAM $(srcdir)/comp_hash.c $(LDFLAGS)
 
 ./expanded.c : $(srcdir)/MKexpanded.sh
 	sh $(srcdir)/MKexpanded.sh "$(CPP)" $(CPPFLAGS)
